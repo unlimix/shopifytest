@@ -21,3 +21,6 @@ Route::prefix('shopify')->group(function () {
 Route::middleware('shopify:embedded_app')->group(function () {
     Route::view('/', 'pages.index');
 });
+
+Route::get('/', 'Shopify\IndexController@index');
+Route::get('/create-product', 'Shopify\IndexController@createProduct');
