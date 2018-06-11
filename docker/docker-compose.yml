@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+
+  nginx:
+    image: nginx
+    volumes:
+      - ..:/var/www/html:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      - php
+      - db
+    ports:
+      - 1111:80
+
+  php:
+    build: ./php
+    volumes:
+      - ..:/var/www/html:z
+    depends_on:
+      - db
+
+  db:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=social-feed
+    ports:
+      - 1112:3306
