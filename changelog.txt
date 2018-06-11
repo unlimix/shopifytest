@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.0.0] - 2018-06-11
+### Added
+- Add functional show shop/products and create new product for private app.
+
 ## [0.1.0] - 2018-06-11
 ### Added
 - Add .htaccess.
 - Add show shop.
 - Add show products.
-- Add create new product functional
+- Add create new product functional.
