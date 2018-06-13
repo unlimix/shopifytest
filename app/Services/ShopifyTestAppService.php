@@ -3,7 +3,12 @@
 namespace App\Services;
 
 use RocketCode\Shopify\API;
+use App\Data\Product\Product;
 
+/**
+ * Class ShopifyTestAppService
+ * @package App\Services
+ */
 class ShopifyTestAppService
 {
 
@@ -37,6 +42,29 @@ class ShopifyTestAppService
     }
 
     /**
+     * @param string $tags
+     * @return Product[]
+     */
+    public function getProductsByTag($tags = '')
+    {
+        $productsShopify = $this->getProducts();
+        $products = [];
+
+        foreach ($productsShopify->products as $productItem) {
+            $products[] = new Product($productItem->id, $productItem->title, $productItem->tags, $productItem->image);
+        }
+
+        if (empty($tags)) {
+            return $products;
+        }
+        $tags = explode(', ', $tags);
+
+        $productsSearch = $this->searchProductsByTags($tags, $products);
+
+        return $productsSearch;
+    }
+
+    /**
      * @return \stdClass|\Exception
      */
     public function createProduct()
@@ -54,6 +82,40 @@ class ShopifyTestAppService
                 ],
             ]
         );
+    }
+
+    /**
+     * @param array $tags
+     * @param array $products
+     * @return array
+     */
+    private function searchProductsByTags(array $tags, array $products)
+    {
+        $productsFind = [];
+
+        foreach ($products as $productItem) {
+            $checked = true;
+            foreach ($tags as $tag) {
+                if ($this->isNotFoundTagInProduct($tag, $productItem)) {
+                    $checked = false;
+                }
+            }
+            if ($checked) {
+                $productsFind[] = $productItem;
+            }
+        }
+
+        return $productsFind;
+    }
+
+    /**
+     * @param $tag
+     * @param Product $product
+     * @return bool
+     */
+    private function isNotFoundTagInProduct($tag, Product $product)
+    {
+        return false === array_search($tag, $product->getTags());
     }
 
     /**
